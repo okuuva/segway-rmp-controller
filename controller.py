@@ -8,6 +8,19 @@ PADDING = 16
 
 
 class RMP:
+    HEADER = 0x0413  # Header - 11 bits valid
+    DLC = 0x0008  # Data Length Code - 4 bits valid
+    # Payload length: 64bits / 8 bytes
+
+    SPEED_MIN = -1176
+    SPEED_MAX = 1176
+    TURN_MIN = -1024
+    TURN_MAX = 1024
+
+    SPEED = 147  # ~0,5 m/s
+    DURATION = 1000  # ms
+    SMOOTH = True
+
     def __init__(self, port):
         try:
             self.serial = serial.Serial(port)
