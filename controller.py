@@ -1,9 +1,19 @@
 # -*- coding: utf-8 -*-
+import serial
 import logging
 
 logger = logging.getLogger(__name__)
 
 PADDING = 16
+
+
+class RMP:
+    def __init__(self, port):
+        try:
+            self.serial = serial.Serial(port)
+        except serial.SerialException as e:
+            raise ValueError("Could not open serial communication with Segway RMP, reason: {}".format(e))
+
 
 def ones_complement(number, padding=PADDING):
     try:
