@@ -63,7 +63,7 @@ def twos_complement(number, padding=PADDING, allow_overflow=False):
     return (complement + 1) & mask
 
 
-def hex_string(number, prefix=True, padding=int(PADDING / 4)):
+def hex_string(number, prefix=False, padding=int(PADDING / 4)):
     try:
         hex_number = hex(number)[2:]
     except TypeError:
