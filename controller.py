@@ -27,6 +27,18 @@ class RMP:
         except serial.SerialException as e:
             raise ValueError("Could not open serial communication with Segway RMP, reason: {}".format(e))
 
+    def right(self, speed=SPEED, duration=DURATION, smooth=SMOOTH):
+        pass
+
+    def left(self, speed=SPEED, duration=DURATION, smooth=SMOOTH):
+        pass
+
+    def forward(self, speed=SPEED, duration=DURATION, smooth=SMOOTH):
+        pass
+
+    def backward(self, speed=SPEED, duration=DURATION, smooth=SMOOTH):
+        pass
+
 
 def ones_complement(number, padding=PADDING):
     try:
