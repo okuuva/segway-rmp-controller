@@ -27,6 +27,22 @@ class RMP:
         except serial.SerialException as e:
             raise ValueError("Could not open serial communication with Segway RMP, reason: {}".format(e))
 
+    def _compose_message(self, velocity, turn, config_command=0, config_parameters=0):
+        # Config values can't be negative
+        config_command = max(0, config_command)
+        config_parameters = max(0, config_parameters)
+        # Make sure velocity and turn rate are kept in the allowed range
+        if velocity < 0:
+            velocity = twos_complement(abs(max(self.SPEED_MIN, velocity)))
+        else:
+            velocity = min(self.SPEED_MAX, velocity)
+        if turn < 0:
+            turn = twos_complement(abs(max(self.TURN_MIN, turn)))
+        else:
+            turn = min(self.TURN_MAX, turn)
+        params = [self.HEADER, self.DLC, velocity, turn, config_command, config_parameters]
+        return "0x" + "".join(map(hex_string, params))
+
     def right(self, speed=SPEED, duration=DURATION, smooth=SMOOTH):
         pass
 
