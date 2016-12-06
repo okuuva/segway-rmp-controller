@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import serial
+import struct
 import logging
 
 logger = logging.getLogger(__name__)
@@ -33,15 +34,14 @@ class RMP:
         config_parameters = max(0, config_parameters)
         # Make sure velocity and turn rate are kept in the allowed range
         if velocity < 0:
-            velocity = twos_complement(abs(max(self.SPEED_MIN, velocity)))
+            velocity = max(self.SPEED_MIN, velocity)
         else:
             velocity = min(self.SPEED_MAX, velocity)
         if turn < 0:
-            turn = twos_complement(abs(max(self.TURN_MIN, turn)))
+            turn = max(self.TURN_MIN, turn)
         else:
             turn = min(self.TURN_MAX, turn)
-        params = [self.HEADER, self.DLC, velocity, turn, config_command, config_parameters]
-        return "0x" + "".join(map(hex_string, params))
+        return struct.pack(">6h", self.HEADER, self.DLC, velocity, turn, config_command, config_parameters)
 
     def right(self, speed=SPEED, duration=DURATION, smooth=SMOOTH):
         if speed <= 0:
