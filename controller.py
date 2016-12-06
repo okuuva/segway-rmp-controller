@@ -97,3 +97,9 @@ def hex_string(number, prefix=False, padding=int(PADDING / 4)):
     if prefix:
         return "0x{}".format(hex_str)
     return hex_str
+
+
+if __name__ == "__main__":
+    rmp = RMP("/dev/ttyUSB0")
+    while True:
+        rmp.forward()
