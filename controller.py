@@ -44,16 +44,24 @@ class RMP:
         return "0x" + "".join(map(hex_string, params))
 
     def right(self, speed=SPEED, duration=DURATION, smooth=SMOOTH):
-        pass
+        if speed <= 0:
+            return
+        self.serial.write(self._compose_message(0, speed))
 
     def left(self, speed=SPEED, duration=DURATION, smooth=SMOOTH):
-        pass
+        if speed >= 0:
+            return
+        self.serial.write(self._compose_message(0, speed))
 
     def forward(self, speed=SPEED, duration=DURATION, smooth=SMOOTH):
-        pass
+        if speed <= 0:
+            return
+        self.serial.write(self._compose_message(speed, 0))
 
-    def backward(self, speed=SPEED, duration=DURATION, smooth=SMOOTH):
-        pass
+    def backward(self, speed=-SPEED, duration=DURATION, smooth=SMOOTH):
+        if speed >= 0:
+            return
+        self.serial.write(self._compose_message(speed, 0))
 
 
 def ones_complement(number, padding=PADDING):
