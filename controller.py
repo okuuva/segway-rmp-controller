@@ -3,6 +3,8 @@ import serial
 import struct
 import logging
 
+from time import sleep
+
 logger = logging.getLogger(__name__)
 
 PADDING = 16
@@ -103,3 +105,4 @@ if __name__ == "__main__":
     rmp = RMP("/dev/ttyUSB0")
     while True:
         rmp.forward()
+        sleep(0.015)
