@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
-import serial
-import struct
 import logging
 
+from canusb import CanUSB
 from time import sleep
 
 logger = logging.getLogger(__name__)
@@ -25,10 +24,7 @@ class RMP:
     SMOOTH = True
 
     def __init__(self, port):
-        try:
-            self.serial = serial.Serial(port)
-        except serial.SerialException as e:
-            raise ValueError("Could not open serial communication with Segway RMP, reason: {}".format(e))
+        self.can = CanUSB(port)
 
     def _compose_message(self, velocity, turn, config_command=0, config_parameters=0):
         # Config values can't be negative
@@ -43,27 +39,30 @@ class RMP:
             turn = max(self.TURN_MIN, turn)
         else:
             turn = min(self.TURN_MAX, turn)
-        return struct.pack(">6h", self.HEADER, self.DLC, velocity, turn, config_command, config_parameters)
+        return {
+            "data": "t{0:03X}{1:X}{0:04X}{0:04X}{0:04X}{0:04X}".format(
+                self.HEADER, self.DLC, velocity, turn, config_command, config_parameters).encode()
+        }
 
     def right(self, speed=SPEED, duration=DURATION, smooth=SMOOTH):
         if speed <= 0:
             return
-        self.serial.write(self._compose_message(0, speed))
+        self.can.send(self._compose_message(0, speed), raw=True)
 
     def left(self, speed=SPEED, duration=DURATION, smooth=SMOOTH):
         if speed >= 0:
             return
-        self.serial.write(self._compose_message(0, speed))
+        self.can.send(self._compose_message(0, speed), raw=True)
 
     def forward(self, speed=SPEED, duration=DURATION, smooth=SMOOTH):
         if speed <= 0:
             return
-        self.serial.write(self._compose_message(speed, 0))
+        self.can.send(self._compose_message(speed, 0), raw=True)
 
     def backward(self, speed=-SPEED, duration=DURATION, smooth=SMOOTH):
         if speed >= 0:
             return
-        self.serial.write(self._compose_message(speed, 0))
+        self.can.send(self._compose_message(speed, 0), raw=True)
 
 
 def ones_complement(number, padding=PADDING):
