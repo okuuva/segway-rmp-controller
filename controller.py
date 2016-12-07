@@ -40,7 +40,7 @@ class RMP:
         else:
             turn = min(self.TURN_MAX, turn)
         return {
-            "data": "t{0:03X}{1:X}{0:04X}{0:04X}{0:04X}{0:04X}".format(
+            "data": "t{0:03X}{1:X}{0:04X}{0:04X}{0:04X}{0:04X}\r".format(
                 self.HEADER, self.DLC, velocity, turn, config_command, config_parameters).encode()
         }
 
