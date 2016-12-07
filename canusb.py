@@ -12,7 +12,8 @@ class CanUSB(serial.Serial):
     Wrapper for Serial
     """
 
-    def __init__(self, port, debug=False, **kwargs):
+    def __init__(self, port, debug=False, check_responses=True, **kwargs):
+        self.check_responses = check_responses
         self.logger = logging.getLogger(__name__)
         try:
             super().__init__(port, timeout=0.1, **kwargs)
@@ -26,6 +27,8 @@ class CanUSB(serial.Serial):
         self.init()
 
     def _check_response(self, expected=b"\r"):
+        if not self.check_responses:
+            return True
         response = self.readline()
         if response == expected:
             self.logger.debug("Response OK")

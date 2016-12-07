@@ -24,7 +24,7 @@ class RMP:
     SMOOTH = True
 
     def __init__(self, port, debug=False):
-        self.can = CanUSB(port, debug=debug)
+        self.can = CanUSB(port, debug=debug, check_responses=False)
 
     def _compose_message(self, velocity, turn, config_command=0, config_parameters=0):
         # Config values can't be negative
