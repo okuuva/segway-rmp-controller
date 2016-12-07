@@ -74,7 +74,7 @@ class CanUSB(serial.Serial):
         self.logger.debug("Closing CAN communication")
         self.write(b"C\r")  # Close port
         self.read()
-        self.set_speed(8)
+        self.set_speed(7)  # RMP does a panic shutdown on 1Mbps speed
         self.status = int(self.open())
         return self.status
 
