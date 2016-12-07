@@ -26,7 +26,7 @@ class CanUSB(serial.Serial):
         self.init()
 
     def _check_response(self, expected=b"\r"):
-        response = self.read()
+        response = self.readline()
         if response == expected:
             self.logger.debug("Response OK")
             return True
