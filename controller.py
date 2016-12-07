@@ -100,8 +100,12 @@ def hex_string(number, prefix=False, padding=int(PADDING / 4)):
     return hex_str
 
 
-if __name__ == "__main__":
+def debug():
     rmp = RMP("/dev/ttyUSB0")
     while True:
         rmp.forward()
         sleep(0.015)
+
+
+if __name__ == "__main__":
+    debug()
