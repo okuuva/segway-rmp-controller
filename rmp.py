@@ -39,10 +39,8 @@ class RMP:
             turn = twos_complement(abs(max(self.TURN_MIN, turn)))
         else:
             turn = min(self.TURN_MAX, turn)
-        return {
-            "data": "t{:03X}{:X}{:04X}{:04X}{:04X}{:04X}\r".format(
-                self.HEADER, self.DLC, velocity, turn, config_command, config_parameters).encode()
-        }
+        params = [self.HEADER, self.DLC, velocity, turn, config_command, config_parameters]
+        return {"data": "t{:03X}{:X}{:04X}{:04X}{:04X}{:04X}\r".format(*params).encode()}
 
     def right(self, speed=SPEED, duration=DURATION, smooth=SMOOTH):
         if speed <= 0:
