@@ -69,6 +69,7 @@ class CanUSB(serial.Serial):
         self.write(b"C\r")  # Close port
         self.readline()
         self.set_speed(6)  # RMP does a panic shutdown on 1Mbps speed
+        self.set_filter()
         self.open()
 
     def get_version(self):  # Check version
@@ -91,12 +92,29 @@ class CanUSB(serial.Serial):
         return self._check_response()
 
     def set_speed(self, speed):
-        self.logger.debug("Setting CAN communication speed")
+        self.logger.debug("Setting CAN communication speed to {}".format(speed))
         if not (0 <= speed <= 8):
             self.logger.error("Invalid communication speed, must be between 0 and 8")
             return False
         self.write("S{}\r".format(speed).encode())
         return self._check_response()
+
+    def set_filter(self):
+        # set a filter to only receive all 11bit ID’s from 0x300 to 0x3FF
+        # this way the heartbeats and status messages don't flood the input filter
+        # TODO: make this generic in order to remove the hardcoded values
+        self.logger.debug("Setting filtering")
+        success = []
+        self.write(b"M00006000\r")
+        success.append(self._check_response())
+        self.write(b"m00001FF0\r")
+        success.append(self._check_response())
+        if False in success:
+            self.logger.error("Setting filter failed!")
+            return False
+        else:
+            self.logger.debug("Set filters successfully")
+            return True
 
     def open(self):
         try:
