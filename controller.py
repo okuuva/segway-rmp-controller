@@ -2,6 +2,7 @@ import sys
 import locale
 from curses import wrapper
 from rmp import RMP
+from time import sleep
 from serial import SerialException
 
 locale.setlocale(locale.LC_ALL, '')
@@ -20,10 +21,14 @@ def main(stdscr, port="/dev/ttyUSB0"):
     except SerialException:
         stdscr.addstr(0, 0, "{:50}".format("RMP init failed, exiting..."))
         sys.exit(1)
+    old_c = ""
     while True:
         c = stdscr.getkey()
         output = ""
-        if c == "ESC":
+        if old_c != c and old_c != "":
+            sleep(0.5)
+            old_c = ""
+        if c == "KEY_ESC":
             break
         elif c in forward:
             rmp.forward()
@@ -38,6 +43,7 @@ def main(stdscr, port="/dev/ttyUSB0"):
             rmp.right()
             output = "RIGHT"
         stdscr.addstr(0, 0, "{:50}".format(output))
+        old_c = c
 
 
 if __name__ == "__main__":
