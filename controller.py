@@ -21,29 +21,28 @@ def main(stdscr, port="/dev/ttyUSB0"):
     except SerialException:
         stdscr.addstr(0, 0, "{:50}".format("RMP init failed, exiting..."))
         sys.exit(1)
-    old_c = ""
+    old_command = ""
     while True:
-        c = stdscr.getkey()
         output = ""
-        if old_c != c and old_c != "":
-            sleep(0.5)
-            old_c = ""
-        if c == "KEY_ESC":
+        command = stdscr.getkey()
+        if command != old_command:
+            sleep(0.25)
+        if command == "KEY_ESC":
             break
-        elif c in forward:
+        elif command in forward:
             rmp.forward()
             output = "FORWARD"
-        elif c in backward:
+        elif command in backward:
             rmp.backward()
             output = "BACKWARD"
-        elif c in left:
+        elif command in left:
             rmp.left()
             output = "LEFT"
-        elif c in right:
+        elif command in right:
             rmp.right()
             output = "RIGHT"
         stdscr.addstr(0, 0, "{:50}".format(output))
-        old_c = c
+        old_command = command
 
 
 if __name__ == "__main__":
