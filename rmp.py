@@ -43,12 +43,12 @@ class RMP:
         return {"data": "t{:03X}{:X}{:04X}{:04X}{:04X}{:04X}\r".format(*params).encode()}
 
     def right(self, speed=SPEED, duration=DURATION, smooth=SMOOTH):
-        if speed <= 0:
+        if speed >= 0:
             return
         self.can.send(self._compose_message(0, speed), raw=True)
 
     def left(self, speed=SPEED, duration=DURATION, smooth=SMOOTH):
-        if speed >= 0:
+        if speed <= 0:
             return
         self.can.send(self._compose_message(0, speed), raw=True)
 
