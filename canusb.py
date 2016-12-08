@@ -23,7 +23,6 @@ class CanUSB(serial.Serial):
             self.logger.setLevel(logging.DEBUG)
         else:
             self.logger.setLevel(logging.INFO)
-        self.status = 1
         self.init()
 
     def _check_response(self, expected=b"\r"):
@@ -47,11 +46,8 @@ class CanUSB(serial.Serial):
             if c == b"":
                 return message
             elif c == b"\r":
-                if message == b"z" or message == b"Z":
-                    self.status = 0
                 return message + c
             elif c == chr(7):
-                self.status = -1
                 return c
             else:
                 message += c
@@ -73,8 +69,7 @@ class CanUSB(serial.Serial):
         self.write(b"C\r")  # Close port
         self.read()
         self.set_speed(6)  # RMP does a panic shutdown on 1Mbps speed
-        self.status = int(self.open())
-        return self.status
+        self.open()
 
     def get_version(self):  # Check version
         self.write(b"V\r")
@@ -127,8 +122,6 @@ class CanUSB(serial.Serial):
             pass
 
     def send(self, msg, raw=False):
-        if self.status != 1:
-            return self.status
         try:
             raw_data = msg["data"]
         except KeyError:
@@ -150,8 +143,6 @@ class CanUSB(serial.Serial):
             for i in range(0, length):
                 data += "{0:02X}".format(ord(raw_data[i])).encode()
 
-        self.status = 1
-
         if frame_length == 11:  # Standard format
             if raw:
                 message = raw_data
@@ -172,6 +163,4 @@ class CanUSB(serial.Serial):
 
         self.write(message)
         self.logger.debug(message)
-        self.status = int(self._check_response(expected_response))
-
-        return self.status
+        return self._check_response(expected_response)
