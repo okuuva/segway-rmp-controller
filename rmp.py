@@ -32,11 +32,11 @@ class RMP:
         config_parameters = max(0, config_parameters)
         # Make sure velocity and turn rate are kept in the allowed range
         if velocity < 0:
-            velocity = max(self.SPEED_MIN, velocity)
+            velocity = twos_complement(abs(max(self.SPEED_MIN, velocity)))
         else:
             velocity = min(self.SPEED_MAX, velocity)
         if turn < 0:
-            turn = max(self.TURN_MIN, turn)
+            turn = twos_complement(abs(max(self.TURN_MIN, turn)))
         else:
             turn = min(self.TURN_MAX, turn)
         return {
