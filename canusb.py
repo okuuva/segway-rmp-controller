@@ -37,11 +37,6 @@ class CanUSB(serial.Serial):
             self.logger.error("Incorrect response! Was expecting {}, got {}".format(expected, response))
             return False
 
-    def _error(self, message):
-        self.logger.error(message)
-        self.status = 0
-        return self.status
-
     def readline(self):
         """
         Overrides io.RawIOBase.readline which cannot handle with b"\r" delimiters
@@ -137,7 +132,8 @@ class CanUSB(serial.Serial):
         try:
             raw_data = msg["data"]
         except KeyError:
-            return self._error("Data missing from message!")
+            self.logger.error("Data missing from message!")
+            return
 
         try:
             frame_length = int(msg["frame-length"])
@@ -145,7 +141,8 @@ class CanUSB(serial.Serial):
             self.logger.debug("CAN frame length missing from the message dict, assuming 11 bits")
             frame_length = 11
         except ValueError:
-            return self._error("CAN frame length must be integer")
+            self.logger.error("CAN frame length must be integer")
+            return
 
         if not raw:
             data = ""
@@ -168,9 +165,10 @@ class CanUSB(serial.Serial):
                 message = "T{0:08X}{1:d}{2:s}\r".format(msg["stdId"] + (msg["extId"] * 0x400), len(raw_data), raw_data).encode()
             expected_response = b"Z\r"
         else:
-            return self._error(
+            self.logger.error(
                 "Incorrect CAN frame length! Frame length must be either 11 or 29 bits, got {}".format(frame_length)
             )
+            return
 
         self.write(message)
         self.logger.debug(message)
