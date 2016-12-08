@@ -1,6 +1,8 @@
+import sys
 import locale
 from curses import wrapper
 from rmp import RMP
+from serial import SerialException
 
 locale.setlocale(locale.LC_ALL, '')
 code = locale.getpreferredencoding()
@@ -11,9 +13,13 @@ right = ["KEY_RIGHT", "d", "e"]
 left = ["KEY_LEFT", "a"]
 
 
-def main(stdscr):
+def main(stdscr, port="/dev/ttyUSB0"):
     stdscr.clear()
-    rmp = RMP("/dev/ttys006", debug=False)
+    try:
+        rmp = RMP(port, debug=False)
+    except SerialException:
+        stdscr.addstr(0, 0, "{:50}".format("RMP init failed, exiting..."))
+        sys.exit(1)
     while True:
         c = stdscr.getkey()
         output = ""
@@ -35,5 +41,8 @@ def main(stdscr):
 
 
 if __name__ == "__main__":
-    # stdscr = curses.initscr()
-    wrapper(main)
+    try:
+        port = sys.argv[1]
+    except IndexError:
+        port = "/dev/ttyUSB0"
+    wrapper(main, port)
