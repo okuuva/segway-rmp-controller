@@ -43,25 +43,70 @@ class RMP:
         params = [self.HEADER, self.DLC, velocity, turn, config_command, config_parameters]
         return {"data": "t{:03X}{:X}{:04X}{:04X}{:04X}{:04X}\r".format(*params).encode()}
 
-    def right(self, speed=-TURN, duration=DURATION, smooth=SMOOTH):
+    def right(self, speed=max(-TURN, TURN_MIN), duration=DURATION, smooth=SMOOTH):
         if speed >= 0:
             return
+        if smooth:
+            goal = speed
+            speed = 0
+            while True:
+                speed = self.smoother(speed, goal)
+                if not speed:
+                    return
+                self.can.send(self._compose_message(0, -speed), raw=True)
+                sleep(0.1)
         self.can.send(self._compose_message(0, speed), raw=True)
 
-    def left(self, speed=TURN, duration=DURATION, smooth=SMOOTH):
+    def left(self, speed=min(TURN, TURN_MAX), duration=DURATION, smooth=SMOOTH):
         if speed <= 0:
             return
+        if smooth:
+            goal = speed
+            speed = 0
+            while True:
+                speed = self.smoother(speed, goal)
+                if not speed:
+                    return
+                self.can.send(self._compose_message(speed, 0), raw=True)
+                sleep(0.1)
         self.can.send(self._compose_message(0, speed), raw=True)
 
-    def forward(self, speed=SPEED, duration=DURATION, smooth=SMOOTH):
+    def forward(self, speed=min(SPEED, SPEED_MAX), duration=DURATION, smooth=SMOOTH):
         if speed <= 0:
             return
+        if smooth:
+            goal = speed
+            speed = 0
+            while True:
+                speed = self.smoother(speed, goal)
+                if not speed:
+                    return
+                self.can.send(self._compose_message(speed, 0), raw=True)
+                sleep(0.1)
         self.can.send(self._compose_message(speed, 0), raw=True)
 
-    def backward(self, speed=-SPEED, duration=DURATION, smooth=SMOOTH):
+    def backward(self, speed=max(-SPEED, SPEED_MIN), duration=DURATION, smooth=SMOOTH):
         if speed >= 0:
             return
+        if smooth:
+            goal = speed
+            speed = 0
+            while True:
+                speed = self.smoother(speed, goal)
+                if not speed:
+                    return
+                self.can.send(self._compose_message(-speed, 0), raw=True)
+                sleep(0.1)
         self.can.send(self._compose_message(speed, 0), raw=True)
+
+    @staticmethod
+    def smoother(start, goal):
+        start = abs(start)
+        goal = abs(goal)
+        if start == goal:
+            return
+        if start < goal:
+            return min(start + 50, goal)
 
 
 def ones_complement(number, padding=PADDING):
