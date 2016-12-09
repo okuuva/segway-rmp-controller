@@ -86,13 +86,3 @@ def twos_complement(number, padding=PADDING, allow_overflow=False):
     mask = int("0b" + (bits * "1"), 2)
     return (complement + 1) & mask
 
-
-def debug():
-    rmp = RMP("/dev/ttyUSB0")
-    while True:
-        rmp.forward()
-        sleep(0.015)
-
-
-if __name__ == "__main__":
-    debug()
