@@ -8,9 +8,9 @@ from serial import SerialException
 locale.setlocale(locale.LC_ALL, '')
 code = locale.getpreferredencoding()
 
-forward = ["KEY_UP", "w", ","]
-backward = ["KEY_DOWN", "s", "o"]
-right = ["KEY_RIGHT", "d", "e"]
+forward = ["KEY_UP", "w"]
+backward = ["KEY_DOWN", "s"]
+right = ["KEY_RIGHT", "d"]
 left = ["KEY_LEFT", "a"]
 
 
@@ -27,7 +27,7 @@ def main(stdscr, port="/dev/ttyUSB0"):
         command = stdscr.getkey()
         if command != old_command:
             sleep(0.25)
-        if command == "KEY_ESC":
+        if command == "KEY_BACKSPACE":
             break
         elif command in forward:
             rmp.forward()
