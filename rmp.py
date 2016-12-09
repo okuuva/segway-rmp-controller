@@ -19,7 +19,8 @@ class RMP:
     TURN_MIN = -1024
     TURN_MAX = 1024
 
-    SPEED = 147  # ~0,5 m/s
+    TURN = 147
+    SPEED = 100  # ~0,5 m/s
     DURATION = 1000  # ms
     SMOOTH = True
 
@@ -42,12 +43,12 @@ class RMP:
         params = [self.HEADER, self.DLC, velocity, turn, config_command, config_parameters]
         return {"data": "t{:03X}{:X}{:04X}{:04X}{:04X}{:04X}\r".format(*params).encode()}
 
-    def right(self, speed=-SPEED, duration=DURATION, smooth=SMOOTH):
+    def right(self, speed=-TURN, duration=DURATION, smooth=SMOOTH):
         if speed >= 0:
             return
         self.can.send(self._compose_message(0, speed), raw=True)
 
-    def left(self, speed=SPEED, duration=DURATION, smooth=SMOOTH):
+    def left(self, speed=TURN, duration=DURATION, smooth=SMOOTH):
         if speed <= 0:
             return
         self.can.send(self._compose_message(0, speed), raw=True)
