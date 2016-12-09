@@ -34,9 +34,9 @@ class UBIRMPController:
             command = self.main_window.getkey()
             if command != old_command:
                 sleep(0.25)
-            if command == "KEY_BACKSPACE":
+            if command == "KEY_F(12)":
                 break
-            elif command == "KEY_F(12)":
+            elif command == "KEY_F(5)":
                 self.restart_browser()
                 output = "Restart browser"
             elif command == " ":
@@ -69,7 +69,10 @@ class UBIRMPController:
 
 def main(stdscr, port):
     controller = UBIRMPController(stdscr, port)
-    controller.main_loop()
+    try:
+        controller.main_loop()
+    except KeyboardInterrupt:
+        pass  # CTRL + C kills the child processes too, closing the restarted browser. Use F12 to exit
 
 
 if __name__ == "__main__":
