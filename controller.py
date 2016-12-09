@@ -4,6 +4,7 @@ from curses import wrapper
 from rmp import RMP
 from time import sleep
 from serial import SerialException
+from subprocess import call
 
 locale.setlocale(locale.LC_ALL, '')
 code = locale.getpreferredencoding()
@@ -29,6 +30,12 @@ def main(stdscr, port="/dev/ttyUSB0"):
             sleep(0.25)
         if command == "KEY_BACKSPACE":
             break
+        elif command == "KEY_F(12)":
+            restart_browser()
+            output = "Restart browser"
+        elif command == " ":
+            click_screen()
+            output = "Click screen"
         elif command in forward:
             rmp.forward()
             output = "FORWARD"
@@ -43,6 +50,17 @@ def main(stdscr, port="/dev/ttyUSB0"):
             output = "RIGHT"
         stdscr.addstr(0, 0, "{:50}".format(output))
         old_command = command
+
+
+def click_screen():
+    click = ["xdotool", "mousemove", "960", "920", "click", "1"]
+    call(click)
+
+
+def restart_browser():
+    call(["pkill", "chromium-browse"])
+    sleep(1)
+    call(["/home/pi/ubicomp.sh"])
 
 
 if __name__ == "__main__":
