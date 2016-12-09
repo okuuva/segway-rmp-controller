@@ -1,3 +1,4 @@
+import os
 import sys
 import locale
 import curses
@@ -5,7 +6,6 @@ import curses
 from rmp import RMP
 from time import sleep
 from serial import SerialException
-from subprocess import call
 
 locale.setlocale(locale.LC_ALL, '')
 code = locale.getpreferredencoding()
@@ -59,14 +59,12 @@ class UBIRMPController:
 
     @staticmethod
     def click_screen():
-        click = ["xdotool", "mousemove", "960", "920", "click", "1"]
-        call(click)
+        os.system("xdotool mousemove 960 920 click 1")
 
     @staticmethod
     def restart_browser():
-        call(["pkill", "chromium-browse"])
-        sleep(1)
-        call(["/home/pi/ubicomp.sh"])
+        os.system("pkill chromium-browse")
+        os.system("/home/pi/ubicomp.sh")
 
 
 def main(stdscr, port):
