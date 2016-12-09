@@ -64,7 +64,8 @@ class UBIRMPController:
     @staticmethod
     def restart_browser():
         os.system("pkill chromium-browse")
-        os.system("/home/pi/ubicomp.sh")
+        path = os.path.dirname(sys.argv[0])
+        os.system(os.path.join(path, "ubicomp.sh"))
 
 
 def main(stdscr, port):
