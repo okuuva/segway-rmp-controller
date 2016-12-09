@@ -15,6 +15,9 @@ backward = ["KEY_DOWN", "s"]
 right = ["KEY_RIGHT", "d"]
 left = ["KEY_LEFT", "a"]
 
+commands = [" ", "KEY_F(5)", "KEY_F(12)"]
+movements = forward + backward + right + left
+
 
 class UBIRMPController:
     def __init__(self, main_window, port):
@@ -28,34 +31,38 @@ class UBIRMPController:
             sys.exit(1)
 
     def main_loop(self):
-        old_command = ""
+        key = ""
         while True:
             output = ""
-            command = self.main_window.getkey()
-            if command != old_command:
-                sleep(0.25)
-            if command == "KEY_F(12)":
+            if key not in commands:
+                key = self.main_window.getkey()
+            if key == "KEY_F(12)":
                 break
-            elif command == "KEY_F(5)":
+            elif key == "KEY_F(5)":
                 self.restart_browser()
                 output = "Restart browser"
-            elif command == " ":
+            elif key == " ":
                 self.click_screen()
                 output = "Click screen"
-            elif command in forward:
-                self.rmp.forward()
-                output = "FORWARD"
-            elif command in backward:
-                self.rmp.backward()
-                output = "BACKWARD"
-            elif command in left:
-                self.rmp.left()
-                output = "LEFT"
-            elif command in right:
-                self.rmp.right()
-                output = "RIGHT"
+            else:
+                while key in movements:
+                    key = self.check_movement_control(key, forward, "FORWARD", self.rmp.forward)
+                    key = self.check_movement_control(key, backward, "BACKWARD", self.rmp.backward)
+                    key = self.check_movement_control(key, left, "LEFT", self.rmp.left)
+                    key = self.check_movement_control(key, right, "RIGHT", self.rmp.right)
             self.main_window.addstr(0, 0, "{:50}".format(output))
-            old_command = command
+
+    def check_movement_control(self, key, command, output, method):
+        if key in command:
+            self.main_window.addstr(0, 0, "{:50}".format(output))
+            method()
+            while True:
+                key = self.main_window.getkey()
+                if key in command:
+                    method(smooth=False)
+                else:
+                    break
+        return key
 
     @staticmethod
     def click_screen():
