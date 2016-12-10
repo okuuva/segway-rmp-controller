@@ -67,7 +67,7 @@ class RMP:
                 speed = self.smoother(speed, goal)
                 if not speed:
                     return
-                self.can.send(self._compose_message(speed, 0), raw=True)
+                self.can.send(self._compose_message(0, speed), raw=True)
                 sleep(0.1)
         self.can.send(self._compose_message(0, speed), raw=True)
 
