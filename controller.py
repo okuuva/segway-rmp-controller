@@ -61,21 +61,21 @@ class UBIRMPController:
                 key = ""
             else:
                 while key in movements:
-                    key = self.check_movement_control(key, forward, "FORWARD", self.rmp.forward)
-                    key = self.check_movement_control(key, backward, "BACKWARD", self.rmp.backward)
-                    key = self.check_movement_control(key, left, "LEFT", self.rmp.left)
-                    key = self.check_movement_control(key, right, "RIGHT", self.rmp.right)
+                    key = self.check_movement_control(key, forward, "FORWARD", self.rmp.forward, self.speed)
+                    key = self.check_movement_control(key, backward, "BACKWARD", self.rmp.backward, self.speed)
+                    key = self.check_movement_control(key, left, "LEFT", self.rmp.left, self.speed)
+                    key = self.check_movement_control(key, right, "RIGHT", self.rmp.right, self.speed)
                 key = ""
             self.main_window.addstr(0, 0, "{:50}".format(output))
 
-    def check_movement_control(self, key, command, output, method):
+    def check_movement_control(self, key, command, output, move, speed):
         if key in command:
             self.main_window.addstr(0, 0, "{:50}".format(output))
-            method()
+            move(speed)
             while True:
                 key = self.main_window.getkey()
                 if key in command:
-                    method(smooth=False)
+                    move(smooth=False)
                 else:
                     break
         return key
