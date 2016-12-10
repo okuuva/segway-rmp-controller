@@ -102,11 +102,13 @@ class RMP:
     @staticmethod
     def smoother(start, goal):
         start = abs(start)
+        if start == 0:
+            start = 50
         goal = abs(goal)
         if start == goal:
             return
         if start < goal:
-            return min(start + 50, goal)
+            return min(start + int(goal / 2) + 1, goal)
 
 
 def ones_complement(number, padding=PADDING):
