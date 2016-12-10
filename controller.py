@@ -15,7 +15,10 @@ backward = ["KEY_DOWN", "s"]
 right = ["KEY_RIGHT", "d"]
 left = ["KEY_LEFT", "a"]
 
-commands = [" ", "KEY_F(5)", "KEY_F(12)"]
+precision = [147, 100]
+turbo = [RMP.SPEED_MAX, RMP.TURN_MAX]
+
+commands = [" ", "t", "KEY_F(5)", "KEY_F(12)"]
 movements = forward + backward + right + left
 
 
@@ -24,6 +27,7 @@ class UBIRMPController:
         curses.curs_set(0)
         self.main_window = main_window
         self.main_window.clear()
+        self.speed, self.turn = precision
         try:
             self.rmp = RMP(port, debug=False)
         except SerialException:
@@ -44,6 +48,14 @@ class UBIRMPController:
             elif key == " ":
                 self.click_screen()
                 output = "Click screen"
+            elif key == "t":
+                if self.speed == RMP.SPEED_MAX:
+                    self.speed, self.turn = precision
+                    output = "Turbo mode off"
+                else:
+                    self.speed, self.turn = turbo
+                    output = "Turbo mode ON!"
+                self.main_window.addstr(10, 0, "{:50}".format(output))
             else:
                 while key in movements:
                     key = self.check_movement_control(key, forward, "FORWARD", self.rmp.forward)
