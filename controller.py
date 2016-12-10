@@ -4,7 +4,6 @@ import locale
 import curses
 
 from rmp import RMP
-from time import sleep
 from serial import SerialException
 
 locale.setlocale(locale.LC_ALL, '')
