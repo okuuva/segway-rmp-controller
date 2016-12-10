@@ -44,9 +44,11 @@ class UBIRMPController:
                 break
             elif key == "KEY_F(5)":
                 self.restart_browser()
+                key = ""
                 output = "Restart browser"
             elif key == " ":
                 self.click_screen()
+                key = ""
                 output = "Click screen"
             elif key == "t":
                 if self.speed == RMP.SPEED_MAX:
@@ -56,12 +58,14 @@ class UBIRMPController:
                     self.speed, self.turn = turbo
                     output = "Turbo mode ON!"
                 self.main_window.addstr(10, 0, "{:50}".format(output))
+                key = ""
             else:
                 while key in movements:
                     key = self.check_movement_control(key, forward, "FORWARD", self.rmp.forward)
                     key = self.check_movement_control(key, backward, "BACKWARD", self.rmp.backward)
                     key = self.check_movement_control(key, left, "LEFT", self.rmp.left)
                     key = self.check_movement_control(key, right, "RIGHT", self.rmp.right)
+                key = ""
             self.main_window.addstr(0, 0, "{:50}".format(output))
 
     def check_movement_control(self, key, command, output, method):
