@@ -23,6 +23,14 @@ tested nor is supported. Using Debian GNU/Linux on the controller machine is rec
 been proven to be working, other distributions are probably fine too but no automatic installation
 scripts are provided. Windows and macOS are not tested nor supported.
 
+## Dependencies
+The only non-standard module dependency is PySerial, which can be installed with pip:
+
+`pip install PySerial`
+
+Some of the school project specific stuff also require Chromium web browser and xdotool, but
+they are not required for the control script to run.
+
 ## Setup
 1. Connect Lawicel CANUSB adapter to your Segway RMP platform per instructions on Segway RMP
    Interface Guide
