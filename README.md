@@ -8,13 +8,14 @@ RMP platform in their project.
 
 ## Contents
 
-* canusb.py, a PySerial wrapper for Lawicel CANUSB adapter
+* canusb.py, a PySerial wrapper for Lawicel CANUSB adapter based on
+[spiralray's CANUSB ROS plugin][wrapper]
 * rmp.py, a control API for Segway RMP platform
 * controller.py, a curses client for controlling the Segway RMP platform
 
 ## Requirements
-* Segway RMP platform
-* Lawicel CANUSB
+* Segway RMP platform (Duh)
+* Lawicel CANUSB (Also duh)
 * Python 3.4 or newer
 
 This project is Python 3 only. It might run on Python 2.7 with little tweaking but hasn't been
@@ -25,7 +26,7 @@ scripts are provided. Windows and macOS are not tested nor supported.
 ## Setup
 1. Connect Lawicel CANUSB adapter to your Segway RMP platform per instructions on Segway RMP
    Interface Guide
-2. Connect Lawicel CANUSB adapter to your controlling machine
+2. Connect Lawicel CANUSB adapter to your control machine
 3. Find the device path of the Lawicel CANUSB adapter with e.g. the following command:
 
     `sudo blkid`
@@ -36,6 +37,7 @@ scripts are provided. Windows and macOS are not tested nor supported.
     drivers for it. I wasn't able to find any for macOS and the Windows drivers were outdated and
     uncompatible with Windows 8 and newer, so good luck...
 
+4. Install control script to your control machine, see next section.
 ## Useful links and references:
 * [Lawicel CANUSB documentation][CANUSB]
 * [CANUSB ROS plugin by spiralray containing the original PySerial wrapper][wrapper]
