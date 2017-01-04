@@ -140,6 +140,10 @@ class CanUSB(serial.Serial):
             pass
 
     def send(self, msg, raw=False):
+        # TODO: Simplify and clean the message format
+        # This is currently overly complex and hackish, the value conversion should be
+        # completely rewritten and separate arguments should be used instead of the dictionary
+        # format
         try:
             raw_data = msg["data"]
         except KeyError:
