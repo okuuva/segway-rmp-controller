@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 echo "------------------------------------ Installing dependencies"
+sudo apt-get update
 sudo apt-get install python3 virtualenv -y
 
 echo "------------------------------------ Creating virtual environment to venv directory"
