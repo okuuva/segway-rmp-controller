@@ -6,6 +6,11 @@ script is really specific for this course, the *canusb* and *rmp* modules might 
 someone wishing to utilize Lawicel CANUSB adapter and/or programmatically control Segway
 RMP platform in their project.
 
+## License
+This program is published under GPLv2, as it utilizes modified version of canusb PySerial
+wrapper originally written by spiralray and it is licensed under GPLv2. For more license details.
+see LICENSE file. The original wrapper can be found [here][wrapper].
+
 ## Contents
 
 * canusb.py, a PySerial wrapper for Lawicel CANUSB adapter based on
