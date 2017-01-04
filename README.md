@@ -46,6 +46,39 @@ they are not required for the control script to run.
     uncompatible with Windows 8 and newer, so good luck...
 
 4. Install control script to your control machine, see next section.
+
+## Installation
+
+If for some reason you need the Chromium restart feature of the controller, run
+`./setup_ubicomp.sh` in the project directory. Otherwise `./setup_venv.sh` is enough to install
+Python 3 interpreter, creating a virtual environment and installing dependencies to it. For
+those running something else than Debian/Ubuntu, you need to manually install Python 3 and
+optionally Chromium and xdotool and creating the virtual environment with PySerial installed.
+
+## Running
+
+Start controller with the following command:
+
+`python3 controller.py <CANUSB device path>`
+
+If you don't provide path to CANUSB adapter, the script assumes it is located at `/dev/ttyUSB0`.
+If communication with the adapter can't be estabilished, the control script displays an error
+message and exits with status code 1.
+
+## Keymap
+* W, Up arrow: Forward
+* S, Down arrow: Backward
+* A, Left arrow: Left turn
+* D, Right arrow: Right turn
+* Space: click screen (requires xdotool)
+* F5: Restart Chromium (requires Chromium browser (duh))
+* F12: Exit
+
+## Todo:
+* Clean up the mess that is message sending method in canusb.py
+* Add more multipurpose moving command to RMP API
+* Add smooth start to movements (started on a separate branch)
+
 ## Useful links and references:
 * [Lawicel CANUSB documentation][CANUSB]
 * [CANUSB ROS plugin by spiralray containing the original PySerial wrapper][wrapper]
